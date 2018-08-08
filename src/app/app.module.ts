@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { FirstService, SecondService } from './services';
 import { AppComponent } from './app.component';
+import { FirstService, SecondService } from './services';
 
 @NgModule({
   declarations: [AppComponent],
