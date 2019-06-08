@@ -13,4 +13,4 @@ import { FirstService, SecondService } from './services';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
