@@ -23,7 +23,7 @@ export class AppComponent {
   val1: number;
   val2: number;
 
-  constructor(@Inject('foo') foos: Array<{ val: number }>) {
+  constructor(@Inject('foo') foos: { val: number }[]) {
     // returns an array of providers with this name.
     this.val1 = foos[0].val;
     this.val2 = foos[1].val;
