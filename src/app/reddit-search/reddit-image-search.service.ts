@@ -19,13 +19,10 @@ export class RedditImageSearchService {
     subReddit: string,
     search: string
   ): Observable<RedditResult[]> {
-    const url =
-      'https://www.reddit.com/r/' +
-      subReddit +
-      '/search.json?restrict_sr=on&q=' +
-      search;
+    const url = `https://www.reddit.com/r/${subReddit}/search.json`;
+    const params = { restrict_sr: 'on', q: search };
     return this.http
-      .get<any[]>(url)
+      .get<any[]>(url, { params })
       .pipe(map(translateRedditResults));
   }
 }

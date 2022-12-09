@@ -31,8 +31,10 @@ export class RedditSearchComponent {
     'mildlyinteresting',
     'awesome'
   ];
-  subReddit = new FormControl(this.subReddits[0]);
-  search = new FormControl('');
+  subReddit = new FormControl(this.subReddits[0], {
+    nonNullable: true
+  });
+  search = new FormControl('', { nonNullable: true });
   results: Observable<RedditResult[]>;
 
   constructor(
