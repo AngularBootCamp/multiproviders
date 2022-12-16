@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, combineLatest } from 'rxjs';
 import {
+  Observable,
+  combineLatest,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -10,7 +11,7 @@ import {
   startWith,
   switchMap,
   tap
-} from 'rxjs/operators';
+} from 'rxjs';
 
 import { LogService } from '../loggers/log.service';
 
