@@ -21,9 +21,9 @@ import {
 } from './reddit-image-search.service';
 
 @Component({
-  selector: 'reddit-search',
+  selector: 'app-reddit-search',
   templateUrl: './reddit-search.component.html',
-  styleUrls: ['./reddit-search.component.css']
+  styleUrls: ['./reddit-search.component.scss']
 })
 export class RedditSearchComponent {
   subReddits = [

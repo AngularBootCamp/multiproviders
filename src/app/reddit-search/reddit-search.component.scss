@@ -1,3 +1,9 @@
+@use 'layout';
+
+.form-fields {
+  @include layout.two-across;
+}
+
 .box {
   float: left;
   width: 140px;

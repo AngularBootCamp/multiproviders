@@ -32,12 +32,14 @@ function translateRedditResults(items: any): RedditResult[] {
 
   return flatMap(
     items.data.children,
-    (item: Record<string, string>): RedditResult[] => {
+    (item: {
+      data?: { thumbnail: string; title: string };
+    }): RedditResult[] => {
       if (item) {
-        const data = item['data'];
+        const data = item.data;
         if (data) {
-          const thumbnail = data['thumbnail'];
-          const title = data['title'];
+          const thumbnail = data.thumbnail;
+          const title = data.title;
           if (thumbnail.startsWith('http')) {
             return [{ thumbnail, title }];
           }
