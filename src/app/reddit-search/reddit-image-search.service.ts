@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { flatMap } from 'lodash-es';
-import { Observable, map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface RedditResult {
   thumbnail: string;
@@ -21,25 +21,30 @@ export class RedditImageSearchService {
     const url = `https://www.reddit.com/r/${subReddit}/search.json`;
     const params = { restrict_sr: 'on', q: search };
     return this.http
-      .get<any[]>(url, { params })
-      .pipe(map(translateRedditResults));
+      .get<RedditSubredditSearchResponse>(url, { params })
+      .pipe(map(translateRedditSubredditSearchResponse));
   }
 }
 
-function translateRedditResults(items: any): RedditResult[] {
+function translateRedditSubredditSearchResponse(
+  response: RedditSubredditSearchResponse
+): RedditResult[] {
   // This function doesn't know anything about HTTP or Observable; it just
   // manages the messy shape of this API's data return layout.
 
   return flatMap(
-    items.data.children,
-    (item: {
-      data?: { thumbnail: string; title: string };
+    response.data.children,
+    (listing: {
+      data?: {
+        thumbnail: string;
+        title: string;
+      };
     }): RedditResult[] => {
-      if (item) {
-        const data = item.data;
-        if (data) {
-          const thumbnail = data.thumbnail;
-          const title = data.title;
+      if (listing) {
+        const listingData = listing.data;
+        if (listingData) {
+          const thumbnail = listingData.thumbnail;
+          const title = listingData.title;
           if (thumbnail.startsWith('http')) {
             return [{ thumbnail, title }];
           }
@@ -48,4 +53,17 @@ function translateRedditResults(items: any): RedditResult[] {
       return [];
     }
   );
+}
+
+interface RedditSubredditSearchResponse {
+  data: {
+    children: RedditSearchListing[];
+  };
+}
+
+interface RedditSearchListing {
+  data: {
+    title: string;
+    thumbnail: string;
+  };
 }
