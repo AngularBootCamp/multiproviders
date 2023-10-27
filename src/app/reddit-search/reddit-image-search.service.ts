@@ -28,17 +28,17 @@ function translateRedditResults(
   // This function doesn't know anything about HTTP or Observable; it just
   // manages the messy shape of this API's data return layout.
 
-  return response.data.children.flatMap(
-    (listing): ImageMetadata[] => {
+  return response.data.children
+    .map((listing): ImageMetadata | undefined => {
       const listingData = listing?.data;
       if (listingData) {
         const thumbnail = listingData.thumbnail;
         const title = listingData.title;
         if (thumbnail.startsWith('http')) {
-          return [{ thumbnail, title }];
+          return { thumbnail, title };
         }
       }
-      return [];
-    }
-  );
+      return undefined;
+    })
+    .filter((metadata): metadata is ImageMetadata => !!metadata);
 }
