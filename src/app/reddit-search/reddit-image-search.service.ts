@@ -1,12 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { flatMap } from 'lodash-es';
 import { map, Observable } from 'rxjs';
 
-export interface RedditResult {
-  thumbnail: string;
-  title: string;
-}
+import { ImageMetadata, RedditResponse } from './types';
 
 @Injectable({
   providedIn: 'root'
@@ -17,53 +13,32 @@ export class RedditImageSearchService {
   search(
     subReddit: string,
     search: string
-  ): Observable<RedditResult[]> {
+  ): Observable<ImageMetadata[]> {
     const url = `https://www.reddit.com/r/${subReddit}/search.json`;
     const params = { restrict_sr: 'on', q: search };
     return this.http
-      .get<RedditSubredditSearchResponse>(url, { params })
-      .pipe(map(translateRedditSubredditSearchResponse));
+      .get<RedditResponse>(url, { params })
+      .pipe(map(translateRedditResults));
   }
 }
 
-function translateRedditSubredditSearchResponse(
-  response: RedditSubredditSearchResponse
-): RedditResult[] {
+function translateRedditResults(
+  response: RedditResponse
+): ImageMetadata[] {
   // This function doesn't know anything about HTTP or Observable; it just
   // manages the messy shape of this API's data return layout.
 
-  return flatMap(
-    response.data.children,
-    (listing: {
-      data?: {
-        thumbnail: string;
-        title: string;
-      };
-    }): RedditResult[] => {
-      if (listing) {
-        const listingData = listing.data;
-        if (listingData) {
-          const thumbnail = listingData.thumbnail;
-          const title = listingData.title;
-          if (thumbnail.startsWith('http')) {
-            return [{ thumbnail, title }];
-          }
+  return response.data.children
+    .map((listing): ImageMetadata[] => {
+      const listingData = listing?.data;
+      if (listingData) {
+        const thumbnail = listingData.thumbnail;
+        const title = listingData.title;
+        if (thumbnail.startsWith('http')) {
+          return [{ thumbnail, title }];
         }
       }
       return [];
-    }
-  );
-}
-
-interface RedditSubredditSearchResponse {
-  data: {
-    children: RedditSearchListing[];
-  };
-}
-
-interface RedditSearchListing {
-  data: {
-    title: string;
-    thumbnail: string;
-  };
+    })
+    .flat();
 }
