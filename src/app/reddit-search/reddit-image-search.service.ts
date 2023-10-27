@@ -28,8 +28,8 @@ function translateRedditResults(
   // This function doesn't know anything about HTTP or Observable; it just
   // manages the messy shape of this API's data return layout.
 
-  return response.data.children
-    .map((listing): ImageMetadata[] => {
+  return response.data.children.flatMap(
+    (listing): ImageMetadata[] => {
       const listingData = listing?.data;
       if (listingData) {
         const thumbnail = listingData.thumbnail;
@@ -39,6 +39,6 @@ function translateRedditResults(
         }
       }
       return [];
-    })
-    .flat();
+    }
+  );
 }
