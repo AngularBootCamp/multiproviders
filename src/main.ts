@@ -1,10 +1,28 @@
 // https://github.com/stackblitz/core/issues/2366
 import 'zone.js'; // Avoid error in StackBlitz for Angular polyfill
 
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { provideHttpClient } from '@angular/common/http';
+import { bootstrapApplication } from '@angular/platform-browser';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { ConsoleLogHandler } from './app/loggers/console-log-handler';
+import { LogHandler } from './app/loggers/log-handler';
+import { LogService } from './app/loggers/log.service';
+import { TelemetryLogHandler } from './app/loggers/telemetry-log-handler';
 
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent, {
+  providers: [
+    LogService,
+    {
+      provide: LogHandler,
+      useClass: ConsoleLogHandler,
+      multi: true
+    },
+    {
+      provide: LogHandler,
+      useClass: TelemetryLogHandler,
+      multi: true
+    },
+    provideHttpClient()
+  ]
+}).catch(err => console.error(err));

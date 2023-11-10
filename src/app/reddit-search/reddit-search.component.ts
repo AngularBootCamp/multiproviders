@@ -1,5 +1,6 @@
+import { NgFor, AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
   Observable,
   combineLatest,
@@ -21,7 +22,9 @@ import { ImageMetadata } from './types';
 @Component({
   selector: 'app-reddit-search',
   templateUrl: './reddit-search.component.html',
-  styleUrls: ['./reddit-search.component.scss']
+  styleUrls: ['./reddit-search.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, NgFor, AsyncPipe]
 })
 export class RedditSearchComponent {
   subReddits = [
