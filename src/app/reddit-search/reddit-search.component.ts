@@ -22,7 +22,7 @@ import { ImageMetadata } from './types';
 @Component({
   selector: 'app-reddit-search',
   templateUrl: './reddit-search.component.html',
-  styleUrls: ['./reddit-search.component.scss'],
+  styleUrl: './reddit-search.component.scss',
   standalone: true,
   imports: [ReactiveFormsModule, NgFor, AsyncPipe]
 })
@@ -44,11 +44,11 @@ export class RedditSearchComponent {
     private logger: LogService
   ) {
     const validSubReddit = this.subReddit.valueChanges.pipe(
-      startWith<string>(this.subReddit.value as string)
+      startWith<string>(this.subReddit.value)
     );
 
     const validSearch = this.search.valueChanges.pipe(
-      startWith<string>(this.search.value as string),
+      startWith<string>(this.search.value),
       map(search => search.trim()),
       debounceTime(200),
       distinctUntilChanged(),
